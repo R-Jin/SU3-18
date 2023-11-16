@@ -1,6 +1,10 @@
 import cv2 as cv
 import numpy as np
 from scipy.signal import correlate
+from util.io.io import loadImages, writeImages
+
+INPUT_IMGS_PATH = './input_imgs'
+OUTPUT_IMGS_PATH = './output_imgs'
 
 def inputImage(imagePath):
     img = cv.imread(imagePath)
@@ -51,8 +55,13 @@ def convolve2D(image, kernel, padding=0, strides=1):
     return output
 
 kernel = np.array([[1, 1, 1], [1, -6, 1], [1, 1, 1]])
-image = inputImage('eye.jpg')
+# image = inputImage('eye.jpg')
+imgs = loadImages(INPUT_IMGS_PATH)
 
-output = convolve2D(image, kernel, padding=2)
-cv.imwrite('./newImg.jpg', output)
+outImgs = []
 
+for img in imgs:
+    grayScaled = cv.cvtColor(img, code=cv.COLOR_BGR2GRAY)
+    outImgs.append(grayScaled)
+
+writeImages(OUTPUT_IMGS_PATH, outImgs)
